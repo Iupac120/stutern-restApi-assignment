@@ -1,0 +1,13 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    background-color: brown;
+}
+
+#enterd-div{
+    display: flex;
+    flex-direction: column;
+    
+}
