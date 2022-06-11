@@ -119,27 +119,16 @@ const putParcel = (req,res)=>{
 }
 
 
-// const deleteParcel = (req,res)=>{
-//     const deleteOrder = data.parcel.findIndex((item)=>{
-//         return item.id === req.body.id
-//     })
-//     if(!deleteOrder){
-//         res.status(400).json({"message":`The parcel with ${deleteOrder} does not exist`})
-//     }
-//     data.parcel.splice(deleteOrder,1)
-//     res.status(200).json(data.parcel)
-// } 
 const deleteParcel = (req,res)=>{
-    const deleteOrder = vendorData.findIndex((item)=>{
+    const deleteOrder = data.parcel.findIndex((item)=>{
         return item.id === req.body.id
     })
     if(!deleteOrder){
         res.status(400).json({"message":`The parcel with ${deleteOrder} does not exist`})
     }
     data.parcel.splice(deleteOrder,1)
-    res.status(200).json(vendorData)
+    res.status(200).json(data.parcel)
 } 
-
 
 const getspecificParcel = (req,res)=>{
     const deleteOrder = data.parcel.find((item)=>{

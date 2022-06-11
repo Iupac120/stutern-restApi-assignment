@@ -33,19 +33,24 @@ app.use('/api',require('./routes/index'))
 //app.use('/parcelId', parcelId)
 
 //app.use('/auth',authLogin)
+//home
+app.get('/home(.html)?',(req,res)=>{
+    res.status(200).sendFile(path.join(__dirname,'views','home.html'))
+    console.log('router')
+})
+
+app.get('/about(.html)?',(req,res)=>{
+    res.status(200).sendFile(path.join(__dirname,'views','about.html'))
+})
+app.get('/contact(.html)?',(req,res)=>{
+    res.status(200).sendFile(path.join(__dirname,'views','contact.html'))
+})
 
 
 
-// app.all('*',(req,res)=>{
-//     if(req.accept('html')){
-//         res.status(200).sendFile(path.join(__dirname,'views','404.html'))
-//     }else if(req.accept('json')){
-//         res.status(200).json({"error":"404 not found"})
-//     }else{
-//         res.type('txt').send('404 not found')
-//     }
-    
-// })
+app.all('*',(req,res)=>{
+    res.status(200).sendFile(path.join(__dirname,'views','404.html'))    
+})
 
 
 

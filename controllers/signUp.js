@@ -26,7 +26,7 @@ const handleNewUser = async(req,res)=>{
             firstname:firstname,
             lastname:lastname,
             address:address,
-            destination:""
+            destination:destination
         }
     userDB.push(newUser)
     await fsPromises.writeFile(path.join(__dirname,'..','model','user2.json'),JSON.stringify(userDB))
