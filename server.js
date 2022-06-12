@@ -33,7 +33,7 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerjsdoc(swaggerOptions)//load the documents by the options passed
 console.log(swaggerDocs)
-app.use('/api',swaggerUi.serve,swaggerUi.setup(swaggerDocs))
+app.use('/api-doc',swaggerUi.serve,swaggerUi.setup(swaggerDocs))
 
 /**
  * @swagger
@@ -47,7 +47,7 @@ app.use('/api',swaggerUi.serve,swaggerUi.setup(swaggerDocs))
 app.use(express.static(path.join(__dirname,'public')))
 
 
-app.use('/api',require('./routes/index'))
+app.use('/api-doc',require('./routes/index'))
 
 app.get('/home(.html)?',(req,res)=>{
     res.status(200).sendFile(path.join(__dirname,'views','home.html'))
