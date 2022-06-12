@@ -1,18 +1,53 @@
 //THE FIRST OF GETTING DIFFERENT ROUTES
 
-const vendorData = require('../model/vendor.json')
-let data = {
-    parcel: require('../model/user2.json')
-}
+let userDB =  require('../model/user2.json')
+
 const path = require('path')
 const fsPromises = require('fs').promises
 
 const getParcel =(req,res)=>{
-    res.json(data.parcel)
+    res.json(userDB)
 }
 
+// const postParcel= async(req,res)=>{
+//     const parcelD = data.parcel.find((item)=>item.id === req.body.id)
+
+//     console.log(parcelD)
+//     const newOrder = {
+//         unique_id:req.body.id,
+//         receiver_name:req.body.name,
+//         parcel_content:req.body.type,
+//         parcel_destination:req.body.destination
+//     }
+//     if(!newOrder.receiver_name || !newOrder.parcel_content ||!newOrder.parcel_destination || !newOrder.unique_id){
+//         res.status(403).json({"message":"parcel details are required"})
+//     }
+    
+//     if(parcelD){
+//         const consignment = ({...parcelD,newOrder})
+//         const OtherParcel = vendorData.find((item)=>item.id === parcelD.id)
+//         console.log(consignment)
+//         if(OtherParcel){
+//             const otherVendorParcel = vendorData.filter((item)=>item.id !== OtherParcel.id)
+//             EveyVendorParcel = ([...otherVendorParcel,consignment])
+//             await fsPromises.writeFile(path.join(__dirname,'..','model','vendor.json'),JSON.stringify(EveyVendorParcel))
+//             res.status(201).json({message:"Parcel already exist"})
+//         }else {
+//             vendorData.push(consignment)
+//             await fsPromises.writeFile(path.join(__dirname,'..','model','vendor.json'),JSON.stringify(vendorData))
+//             res.status(201).json({message:"new parcel added"})
+//         }
+//     }else{
+//         res.status(403).json({message:"You have not registered user"})
+//     }
+    
+    
+// } 
+
+
+
 const postParcel= async(req,res)=>{
-    const parcelD = data.parcel.find((item)=>item.id === req.body.id)
+    const parcelD = userDB.find((item)=>item.id === req.body.id)
 
     console.log(parcelD)
     const newOrder = {
@@ -25,26 +60,20 @@ const postParcel= async(req,res)=>{
         res.status(403).json({"message":"parcel details are required"})
     }
     
-    if(parcelD){
-        const consignment = ({...parcelD,newOrder})
-        const OtherParcel = vendorData.find((item)=>item.id === parcelD.id)
-        console.log(consignment)
-        if(OtherParcel){
-            const otherVendorParcel = vendorData.filter((item)=>item.id !== OtherParcel.id)
-            EveyVendorParcel = ([...otherVendorParcel,consignment])
-            await fsPromises.writeFile(path.join(__dirname,'..','model','vendor.json'),JSON.stringify(EveyVendorParcel))
-            res.status(201).json({message:"Parcel already exist"})
-        }else {
-            vendorData.push(consignment)
-            await fsPromises.writeFile(path.join(__dirname,'..','model','vendor.json'),JSON.stringify(vendorData))
-            res.status(201).json({message:"new parcel added"})
-        }
-    }else{
-        res.status(403).json({message:"You have not registered user"})
-    }
-    
-    
+if(parcelD){
+    const consignment = ({...parcelD,newOrder})
+    const otherParcels = userDB.filter((item)=>item.id !== req.body.id)
+    const allData = ([...otherParcels,consignment])
+    userDB.push(allData)
+    res.status(201).json({message:"new parcel added"})
+}else{
+    res.status(403).json({message:"You have not registered user"})
+}
 } 
+
+
+
+
 // const putParcel = (req,res)=>{
 //     console.log(vendorData.newOrder)
 //     console.log(data.parcel.id)
@@ -83,9 +112,8 @@ const postParcel= async(req,res)=>{
 
 
 const putParcel = (req,res)=>{
-    console.log(vendorData.newOrder)
     //console.log(data.parcel.id)
-    const updateParcel = vendorData.find((item)=>{
+    const updateParcel = userDB.find((item)=>{
         return item.id === parseInt(req.body.id)
     })
     console.log(updateParcel.id)
@@ -101,7 +129,7 @@ const putParcel = (req,res)=>{
     if(updateParcel.newOrder.parcel_destination){
         updateParcel.newOrder.parcel_destination = req.body.destination
     }
-    let unchangedParcel = vendorData.filter((item)=>{
+    let unchangedParcel = userDB.filter((item)=>{
         return item.id !== parseInt(req.body.id)
     })
     const newData = [...unchangedParcel,updateParcel]
@@ -120,18 +148,18 @@ const putParcel = (req,res)=>{
 
 
 const deleteParcel = (req,res)=>{
-    const deleteOrder = data.parcel.findIndex((item)=>{
+    const deleteOrder = userDB.findIndex((item)=>{
         return item.id === req.body.id
     })
     if(!deleteOrder){
         res.status(400).json({"message":`The parcel with ${deleteOrder} does not exist`})
     }
-    data.parcel.splice(deleteOrder,1)
+    userDB.splice(deleteOrder,1)
     res.status(200).json(data.parcel)
 } 
 
 const getspecificParcel = (req,res)=>{
-    const deleteOrder = data.parcel.find((item)=>{
+    const deleteOrder = userDB.find((item)=>{
         return item.id === parseInt(req.params.id)
     })
     if(!deleteOrder){
@@ -141,7 +169,7 @@ const getspecificParcel = (req,res)=>{
 }
 
 const putSpecificParcel = (req,res)=>{
-    const updateParcel = data.parcel.find((item)=>{
+    const updateParcel = userDB.find((item)=>{
         return item.id === parseInt(req.params.id)
     })
     if(!updateParcel){
@@ -156,7 +184,7 @@ const putSpecificParcel = (req,res)=>{
     if(updateParcel.destination){
         updateParcel.destination = req.body.destination
     }
-    let unchangedParcel = data.parcel.filter((item)=>{
+    let unchangedParcel = userDB.filter((item)=>{
         return item.id !== parseInt(req.body.id)
     })
     const newData = [...unchangedParcel,updateParcel]
@@ -175,7 +203,7 @@ const putSpecificParcel = (req,res)=>{
 }
 
 const deleteSpecificParcel = (req,res)=>{
-    const deleteOrder = data.parcel.find((item)=>{
+    const deleteOrder = userDB.find((item)=>{
         return item.id === req.params.id
     })
     if(!deleteOrder){
